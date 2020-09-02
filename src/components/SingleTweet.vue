@@ -25,6 +25,7 @@
       return {
         text: '',
         modelLoaded: false,
+        modelJSON: require('../model/jsmodel/model.json'),
         tokenizer: require('../model/tokenizer.json'),
         rules: {
           required: value => !!value || 'Required.',
@@ -33,9 +34,12 @@
       }
     },
   mounted(){
-    const model = tf.loadLayersModel('../model/jsmodel/model.json');
+    this.loadModel();
   },
   methods: {
+      async loadModel(){
+        this.model = await tf.loadLayersModel(this.modelJSON)
+      },
       stringCleaner(text){
         return text.toLowerCase().trim().replace(/@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+/g, " ").split(" ");
       },
