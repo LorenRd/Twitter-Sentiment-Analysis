@@ -38,7 +38,9 @@
   },
   methods: {
       async loadModel(){
-        this.model = await tf.loadLayersModel(this.modelJSON)
+        console.log(this.modelJSON)
+        const model = await tf.loadLayersModel(this.modelJSON);
+        console.log(model.summary())
       },
       stringCleaner(text){
         return text.toLowerCase().trim().replace(/@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+/g, " ").split(" ");
@@ -63,12 +65,14 @@
         return arrayTokens;
       },
       predict(arrayTokensPadded){
+        /*
         let inputTensor = tf.tensor(arrayTokensPadded);
         this.model.then(model => {
           let result = model.predict(inputTensor);
           result = result.round().dataSync()[0];
           alert(result ? "possitive" : "negative");
         });
+        */
       },
       getTweetText(){
         if(this.$refs.form.validate()){
