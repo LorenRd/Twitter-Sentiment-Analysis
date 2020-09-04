@@ -8,9 +8,6 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@tensorflow/tfjs": "^2.3.0",
-    "@tensorflow/tfjs-node": "^2.3.0",
-    "aws-sdk": "^2.743.0",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "node-fetch": "^2.6.0",

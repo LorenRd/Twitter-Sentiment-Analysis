@@ -4,12 +4,18 @@
       class="fill-height"
       fluid
     >
+    <v-row
+        align="center"
+        justify="center"
+      >
+      <h2>Text analyser</h2>
+          </v-row>
       <v-row
         align="center"
         justify="center"
       >
         <v-col cols="12" sm="6" md="3">
-              <v-text-field prepend-inner-icon="mdi-card-text" v-model="text" :rules="[rules.required, rules.counter]"  counter maxlength="250"  label="Paste tweet body"
+              <v-text-field prepend-inner-icon="mdi-card-text" v-model="text" :rules="[rules.required, rules.counter]"  counter maxlength="250"  label="Write some text..."
               ></v-text-field><v-btn @click="getTweetText" color="primary">Analyse!</v-btn>
         </v-col>
       </v-row>
@@ -18,7 +24,6 @@
 </template>
 
 <script>
-  import * as tf from '@tensorflow/tfjs';
   import axios from "axios";
 
   export default {
@@ -26,7 +31,6 @@
       return {
         text: '',
         modelLoaded: false,
-        tokenizer: require('../model/tokenizer.json'),
         rules: {
           required: value => !!value || 'Required.',
           counter: value => value.length <= 250 || 'Max 250 characters',
@@ -38,7 +42,7 @@
         return text.toLowerCase().trim().replace(/@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+/g, " ").split(" ");
       },
       predict(stringCleaned){
-        axios.post("http://localhost:5000/predict", {"stringCleaned": stringCleaned})
+        axios.post("https://nlp-sentiment-analysis-backend.herokuapp.com/predict", {"stringCleaned": stringCleaned}, {headers: {"Access-Control-Allow-Origin": "*"}})
         .then((result) => 
         console.log(result.data));
       },

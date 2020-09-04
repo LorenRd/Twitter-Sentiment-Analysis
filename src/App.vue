@@ -5,20 +5,28 @@
       app
     >
       <v-list dense>
-        <v-list-item link>
+        <v-list-item link v-on:click="view = 'home'"> 
           <v-list-item-action>
-            <v-icon>mdi-home</v-icon>
+            <v-icon>mdi-card-text</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
+            <v-list-item-title>Text Analysis</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link v-on:click="view = 'accounts'"> 
           <v-list-item-action>
-            <v-icon>mdi-email</v-icon>
+            <v-icon>mdi-account</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Contact</v-list-item-title>
+            <v-list-item-title>Twitter Accounts</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link v-on:click="view = 'hashtags'">
+          <v-list-item-action>
+            <v-icon>mdi-pound</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Hashtags</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -30,11 +38,13 @@
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>👍/👎 Twitter Sentiment Analysis</v-toolbar-title>
+      <v-toolbar-title>👍/👎 NLP Sentiment Analysis</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
-      <SingleTweet/>
+      <SingleTweet v-if="view === 'home'"/>
+      <Hashtags v-if="view === 'hashtags'"/>
+      <Accounts v-if="view === 'accounts'"/>
     </v-main>
     <v-footer
       color="indigo"
@@ -47,12 +57,18 @@
 
 <script>
   import SingleTweet from './components/SingleTweet.vue';
+  import Hashtags from './components/Hashtags.vue';
+  import Accounts from './components/Accounts.vue';
+
   export default {
     components: {
-      SingleTweet
+      SingleTweet,
+      Hashtags,
+      Accounts
     },
     data: () => ({
       drawer: null,
+      view: 'home'
     }),
   }
 </script>
