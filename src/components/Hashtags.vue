@@ -1,4 +1,6 @@
 <template>
+  <div>
+  <v-progress-linear v-show="hashtagsLoading" indeterminate color="cyan" />
   <v-form ref="form">
     <v-container
       class="fill-height"
@@ -15,20 +17,21 @@
         justify="center"
       >
         <v-col cols="12" sm="6" md="3">
-              <h3>#Topic1</h3>
+              <h3>#{{Object.keys(trends)[0]}}</h3>
+              <TwitterCard v-for="tw in Object.values(Object.keys(trends)[0])" :key="tw.id" :tweetBody="tw.text" :username="twitterName" :score="tw.score" :userProfile="twitterImage" :label="tw.label"/>
+        </v-col>
+        <v-col cols="12" sm="6" md="3">
+              <h3>#{{Object.keys(trends)[1]}}</h3>
               <TwitterCard />
         </v-col>
         <v-col cols="12" sm="6" md="3">
-              <h3>#Topic2</h3>
-              <TwitterCard />
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-              <h3>#Topic3</h3>
+              <h3>#{{Object.keys(trends)[2]}}</h3>
               <TwitterCard />
         </v-col>
       </v-row>
     </v-container>
   </v-form>
+  </div>
 </template>
 
 <script>
@@ -41,30 +44,21 @@
     },
     data(){
       return {
-        text: '',
-        modelLoaded: false,
-        rules: {
-          required: value => !!value || 'Required.',
-          counter: value => value.length <= 250 || 'Max 250 characters',
-        },
+        hashtagsLoading: true,
+        trends: {}
       }
     },
+    mounted(){
+
+      axios.get("http://127.0.0.1:5000/hashtags", {headers: {"Access-Control-Allow-Origin": "*"}})
+      .then((result) => {
+        this.hashtagsLoading = false;
+        this.trends = result.data;
+        console.log(this.trends)
+      });
+    },
   methods: {
-      stringCleaner(text){
-        return text.toLowerCase().trim().replace(/@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+/g, " ").split(" ");
-      },
-      predict(stringCleaned){
-        axios.post("https://nlp-sentiment-analysis-backend.herokuapp.com/predict", {"stringCleaned": stringCleaned}, {headers: {"Access-Control-Allow-Origin": "*"}})
-        .then((result) => 
-        console.log(result.data));
-      },
-      getTweetText(){
-        if(this.$refs.form.validate()){
-          let stringCleaned = this.stringCleaner(this.text);
-          this.predict(stringCleaned);
-        }
-      }
     }
 
-  }
+    }
 </script>

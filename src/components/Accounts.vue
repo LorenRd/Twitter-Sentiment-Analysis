@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form">
+  <v-form ref="form" @submit.prevent="getUserInfo()">
     <v-container
       class="fill-height"
       fluid
@@ -8,7 +8,7 @@
         align="center"
         justify="center"
       >
-      <h2>Account analyser</h2>
+      <h1>Account analyser</h1>
           </v-row>
       <v-row
         align="center"
@@ -16,8 +16,14 @@
       >
         <v-col cols="12" sm="6" md="3">
               <v-text-field prepend-inner-icon="mdi-account" v-model="username" :rules="[rules.required]"  label="@username"
-              ></v-text-field><v-btn @click="getTweetText" color="primary">Search!</v-btn>
+              ></v-text-field><v-btn type="submit" color="primary">Search!</v-btn>
         </v-col>
+      </v-row>
+      <v-row
+          align="center"
+          justify="center"
+        >
+          <TwitterCard v-for="tw in tweets" :key="tw.id" :tweetBody="tw.text" :username="twitterName" :score="tw.score" :userProfile="twitterImage" :label="tw.label"/>
       </v-row>
     </v-container>
   </v-form>
@@ -25,11 +31,18 @@
 
 <script>
   import axios from "axios";
+  import TwitterCard from './TwitterCard.vue';
 
   export default {
+    components: {
+      TwitterCard
+    },
     data(){
       return {
         username: '',
+        twitterName: '',
+        twitterImage: '',
+        tweets: [],
         rules: {
           required: value => !!value || 'Required.',
         },
@@ -37,14 +50,17 @@
     },
   methods: {
       searchUsername(username){
-        axios.post("https://nlp-sentiment-analysis-backend.herokuapp.com/predict", {"username": username}, {headers: {"Access-Control-Allow-Origin": "*"}})
-        .then((result) => 
-        console.log(result.data));
+        axios.post("http://127.0.0.1:5000/account", {"userAccount": username}, {headers: {"Access-Control-Allow-Origin": "*"}})
+        .then((result) => {
+          this.twitterName = result.data.profileInfo.user;
+          this.twitterImage = result.data.profileInfo.profileImage;
+          this.tweets = result.data.tweets;
+          console.log(result.data)
+        });
       },
-      getTweetText(){
+      getUserInfo(){
         if(this.$refs.form.validate()){
           let usernameInfo = this.searchUsername(this.username);
-            console.log(usernameInfo)
         }
       }
     }
