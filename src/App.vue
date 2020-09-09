@@ -21,12 +21,20 @@
             <v-list-item-title>Twitter Accounts</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link v-on:click="view = 'trends'">
+          <v-list-item-action>
+            <v-icon>mdi-trending-up</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Trends</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item link v-on:click="view = 'hashtags'">
           <v-list-item-action>
             <v-icon>mdi-pound</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Hashtags</v-list-item-title>
+            <v-list-item-title>Hashtag</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -43,8 +51,9 @@
 
     <v-main>
       <SingleTweet v-if="view === 'home'"/>
-      <Hashtags v-if="view === 'hashtags'"/>
+      <Trends v-if="view === 'trends'"/>
       <Accounts v-if="view === 'accounts'"/>
+      <Hashtags v-if="view === 'hashtags'"/>
     </v-main>
     <v-footer
       color="indigo"
@@ -59,12 +68,14 @@
   import SingleTweet from './components/SingleTweet.vue';
   import Hashtags from './components/Hashtags.vue';
   import Accounts from './components/Accounts.vue';
+  import Trends from './components/Trends.vue';
 
   export default {
     components: {
       SingleTweet,
       Hashtags,
-      Accounts
+      Accounts,
+      Trends
     },
     data: () => ({
       drawer: null,

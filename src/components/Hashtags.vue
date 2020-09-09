@@ -1,7 +1,7 @@
 <template>
   <div>
   <v-progress-linear v-show="hashtagsLoading" indeterminate color="cyan" />
-  <v-form ref="form">
+  <v-form ref="form" @submit.prevent="getUserInfo()">
     <v-container
       class="fill-height"
       fluid
@@ -10,24 +10,22 @@
         align="center"
         justify="center"
       >
-      <h2>Hashtags</h2>
-      </v-row>
+      <h1>Hashtag analyser</h1>
+          </v-row>
       <v-row
         align="center"
         justify="center"
       >
         <v-col cols="12" sm="6" md="3">
-              <h3>#{{Object.keys(trends)[0]}}</h3>
-              <TwitterCard v-for="tw in Object.values(Object.keys(trends)[0])" :key="tw.id" :tweetBody="tw.text" :username="twitterName" :score="tw.score" :userProfile="twitterImage" :label="tw.label"/>
+              <v-text-field prepend-inner-icon="mdi-pound" v-model="hashtag" :rules="[rules.required]"  label="Hashtag"
+              ></v-text-field><v-btn :disabled="hashtagsLoading" type="submit" color="primary">Search!</v-btn>
         </v-col>
-        <v-col cols="12" sm="6" md="3">
-              <h3>#{{Object.keys(trends)[1]}}</h3>
-              <TwitterCard />
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-              <h3>#{{Object.keys(trends)[2]}}</h3>
-              <TwitterCard />
-        </v-col>
+      </v-row>
+      <v-row
+          align="center"
+          justify="center"
+        >
+          <TwitterCard v-for="tw in tweets" :key="tw.id" :tweetBody="tw.text" :username="tw.user" :score="tw.score" :userProfile="tw.profileImage" :label="tw.label"/>
       </v-row>
     </v-container>
   </v-form>
@@ -44,21 +42,30 @@
     },
     data(){
       return {
-        hashtagsLoading: true,
-        trends: {}
+        hashtag: '',
+        hashtagsLoading: false,
+        tweets: [],
+        rules: {
+          required: value => !!value || 'Required.',
+        },
       }
     },
-    mounted(){
-
-      axios.get("http://127.0.0.1:5000/hashtags", {headers: {"Access-Control-Allow-Origin": "*"}})
-      .then((result) => {
-        this.hashtagsLoading = false;
-        this.trends = result.data;
-        console.log(this.trends)
-      });
-    },
   methods: {
+      searchUsername(hashtag){
+        this.hashtagsLoading = true;
+        axios.post("http://127.0.0.1:5000/hashtag", {"hashtag": hashtag}, {headers: {"Access-Control-Allow-Origin": "*"}})
+        .then((result) => {
+          this.tweets = result.data;
+          this.hashtagsLoading = false;
+          console.log(this.tweets)
+        });
+      },
+      getUserInfo(){
+        if(this.$refs.form.validate()){
+          let hashtagInfo = this.searchUsername(this.hashtag);
+        }
+      }
     }
 
-    }
+  }
 </script>

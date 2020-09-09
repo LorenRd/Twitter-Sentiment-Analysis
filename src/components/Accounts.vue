@@ -1,4 +1,6 @@
 <template>
+  <div>
+  <v-progress-linear v-show="accountLoading" indeterminate color="cyan" />
   <v-form ref="form" @submit.prevent="getUserInfo()">
     <v-container
       class="fill-height"
@@ -16,7 +18,7 @@
       >
         <v-col cols="12" sm="6" md="3">
               <v-text-field prepend-inner-icon="mdi-account" v-model="username" :rules="[rules.required]"  label="@username"
-              ></v-text-field><v-btn type="submit" color="primary">Search!</v-btn>
+              ></v-text-field><v-btn :disabled="accountLoading" type="submit" color="primary">Search!</v-btn>
         </v-col>
       </v-row>
       <v-row
@@ -27,6 +29,7 @@
       </v-row>
     </v-container>
   </v-form>
+  </div>
 </template>
 
 <script>
@@ -42,6 +45,7 @@
         username: '',
         twitterName: '',
         twitterImage: '',
+        accountLoading: false,
         tweets: [],
         rules: {
           required: value => !!value || 'Required.',
@@ -50,11 +54,13 @@
     },
   methods: {
       searchUsername(username){
+        this.accountLoading = true;
         axios.post("http://127.0.0.1:5000/account", {"userAccount": username}, {headers: {"Access-Control-Allow-Origin": "*"}})
         .then((result) => {
           this.twitterName = result.data.profileInfo.user;
           this.twitterImage = result.data.profileInfo.profileImage;
           this.tweets = result.data.tweets;
+          this.accountLoading = false;
           console.log(result.data)
         });
       },

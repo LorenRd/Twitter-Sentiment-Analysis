@@ -1,5 +1,6 @@
 <template>
   <v-form ref="form" @submit.prevent="getTweetText()" :style="{background: background, height: '100%'}">
+    <v-progress-linear v-show="tweetLoading" indeterminate color="cyan" />
     <v-container
       class="fill-height"
       fluid
@@ -16,7 +17,7 @@
       >
         <v-col cols="12" sm="6">
               <v-text-field prepend-inner-icon="mdi-card-text" v-model="text" :rules="[rules.required, rules.counter]"  counter maxlength="250"  label="Write some text..."
-              ></v-text-field><v-btn type="submit" color="primary">Analyse!</v-btn>
+              ></v-text-field><v-btn :disabled="tweetLoading" type="submit" color="primary">Analyse!</v-btn>
               <v-row
                 align="center"
                 justify="center"
@@ -40,6 +41,7 @@
         score: 0,
         label: '',
         background: '',
+        tweetLoading: false,
         rules: {
           required: value => !!value || 'Required.',
           counter: value => value.length <= 250 || 'Max 250 characters',
@@ -67,8 +69,10 @@
       },
       getTweetText(){
         if(this.$refs.form.validate()){
+          this.tweetLoading = true;
           let stringCleaned = this.stringCleaner(this.text);
           this.predict(stringCleaned);
+          this.tweetLoading = false;
         }
       }
     }
