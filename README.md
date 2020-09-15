@@ -1,4 +1,14 @@
-# twitter-sentiment-analysis-app
+# Twitter Sentiment Analysis APP
+
+This is a personal project for getting started with NLP. 
+
+![Twitter Sentiment Analysis](./demos/text_analysis.gif)
+
+## Functionalities
+* Text analysis
+* Trends analysis
+* Account analysis
+* Hashtag analysis
 
 ## Project setup
 ```
