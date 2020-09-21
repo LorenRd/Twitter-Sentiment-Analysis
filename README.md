@@ -4,11 +4,15 @@ This is a personal project for getting started with NLP.
 
 ![Twitter Sentiment Analysis](./demos/text_analysis.gif)
 
+## Index
+1. [Functionalities](#Functionalities)
+2. [About the project](#About-the-project)
+3. [Frontend Project setup](#Frontend-Project-setup)
+4. [Backend Project setup](#Backend-Project-setup)
+
+
 ## Functionalities
-* Text analysis
-* Trends analysis
-* Account analysis
-* Hashtag analysis
+* Text analysis:
 
     This functionality allow you to analyse a simple text (like the body of a tweet), when submit the analyser will return a value that represent what your text transmit. It can be possitive, negative or neutral.
 
@@ -57,10 +61,12 @@ npm run serve
 npm run build
 ```
 
-### Lints and fixes files
+## Backend Project setup
 ```
-npm run lint
+pip install -r requirements.txt
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Run Flask API
+```
+python application.py
+```
